@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Session | Autoreels AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        .connection-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 3s linear forwards;
+        }
+        @keyframes dash {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        .modal-enter {
+            animation: slideInDown 0.5s forwards;
+        }
+        .status-text {
+            min-height: 24px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 flex items-center justify-center h-screen">
+    <div class="max-w-md w-full bg-white rounded-xl shadow-2xl overflow-hidden transition-all duration-500">
+        <!-- Header -->
+        <div class="bg-indigo-600 p-6 text-white">
+            <div class="flex items-center space-x-3">
+                <div class="relative">
+                    <!-- Bot Face SVG -->
+                    <svg width="48" height="48" viewBox="0 0 24 24" class="float-animation">
+                        <circle cx="12" cy="12" r="10" fill="#ffffff" />
+                        <circle cx="9" cy="10" r="1.5" fill="#4f46e5" />
+                        <circle cx="15" cy="10" r="1.5" fill="#4f46e5" />
+                        <path d="M8 15h8" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" fill="none" />
+                        <path d="M12 15v-3" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" fill="none" />
+                    </svg>
+                    <div class="absolute -bottom-1 -right-1 bg-green-500 rounded-full w-4 h-4 border-2 border-white"></div>
+                </div>
+                <div>
+                    <h1 class="text-xl font-semibold">Autoreels AI</h1>
+                    <p class="text-indigo-100 text-sm">Secure session authentication</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="p-6">
+            <div class="text-center mb-6">
+                <p class="text-gray-700 mb-2">Your login was successful. We're finalizing a secure connection between your account and Autoreels AI.</p>
+            </div>
+            
+            <!-- Connection Visualization -->
+            <div class="relative flex justify-between items-center mb-8 px-10">
+                <!-- Bot -->
+                <div class="relative z-10">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-robot" style="color:#00bfff; font-size:20px;"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Connection Lines -->
+                <svg width="100%" height="20" viewBox="0 0 200 20" class="absolute left-0 right-0 mx-auto" xmlns="http://www.w3.org/2000/svg">
+                    <path class="connection-line" d="M30,10 L170,10" stroke="#4F46E5" stroke-width="2" stroke-dasharray="5,5" fill="none"/>
+                </svg>
+                
+                <!-- Lock Icon (Animated) -->
+                <div class="relative z-10 pulse-animation">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                           <i class="fas fa-lock"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Web/Social Icon -->
+                <div class="relative z-10">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-globe" style="color:#50c878; font-size:20px;"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Status Messages -->
+            <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                <div class="text-center status-text">
+                    <p class="text-gray-700 font-medium animate__animated animate__fadeIn" id="statusMessage">Getting things ready.....</p>
+                </div>
+                <div class="mt-2 h-1 w-full bg-gray-200 rounded-full overflow-hidden">
+                    <div id="progressBar" class="h-full bg-indigo-600 rounded-full transition-all duration-1000" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <p class="text-center text-gray-500 text-sm">Please wait. This may take a few seconds. Do not close this page.</p>
+        </div>
+    </div>
+    
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center hidden pt-16">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md modal-enter animate__animated animate__slideInDown">
+            <div class="p-6">
+                <div class="flex items-center justify-center mb-4">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 13L9 17L19 7" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <h3 class="text-lg font-medium text-center text-gray-900 mb-2">Preparing dashboard access</h3>
+                <p class="text-center text-gray-500 mb-6 ">You'll be redirected to your dashboard shortly.</p>
+                <div class="text-center">
+                    <br><br>
+                    <a href="dashboard.html" id="redirectLink" class="  text-indigo-600 hover:text-indigo-800 font-medium">Click here if you're not redirected automatically</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Status messages to cycle through
+        const statusMessages = [
+            "Getting things ready.....",
+            "Establishing secure session...",
+            "Gathering information...",
+            "Connecting to account....",
+            "Syncing with Autoreels AI..."
+        ];
+        
+        let currentMessageIndex = 0;
+        const statusElement = document.getElementById('statusMessage');
+        const progressBar = document.getElementById('progressBar');
+        const successModal = document.getElementById('successModal');
+        const redirectLink = document.getElementById('redirectLink');
+        
+        // Cycle through status messages
+        const cycleMessages = () => {
+            currentMessageIndex = (currentMessageIndex + 1) % statusMessages.length;
+            statusElement.classList.remove('animate__fadeIn');
+            void statusElement.offsetWidth; // Trigger reflow
+            statusElement.classList.add('animate__fadeIn');
+            statusElement.textContent = statusMessages[currentMessageIndex];
+            
+            // Update progress bar
+            const progress = ((currentMessageIndex + 1) / statusMessages.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            // If we've shown all messages, show success
+            if (currentMessageIndex === statusMessages.length - 1) {
+                setTimeout(showSuccess, 2000);
+                return;
+            }
+            
+            setTimeout(cycleMessages, 2000);
+        };
+        
+        // Show success modal and redirect
+        const showSuccess = () => {
+            statusElement.textContent = "Synced";
+            statusElement.classList.add('text-green-600');
+            
+            // Show modal
+            successModal.classList.remove('hidden');
+            
+            // Redirect after a short delay
+            setTimeout(() => {
+                window.open('dashboard.html', '_blank');
+            }, 1500);
+            
+            // Clear and redirect back to index after 30 seconds
+            setTimeout(() => {
+                window.location.href = 'page-not-found.html';
+            }, 30000);
+        };
+        
+        // Start the process
+        setTimeout(cycleMessages, 1000);
+        
+        // Ensure the redirect link opens in new tab without popup blocking
+        redirectLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open('dashboard.html', '_blank');
+        });
+         sessionStorage.setItem('verified', 'true');
+    </script>
+</body>
+</html>

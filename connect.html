@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autoreels AI - Connect Your Socials</title>
+    <link rel="shortcut icon" href="./assets/images/fav.png"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <style>
+        :root {
+            --instagram-color: #E1306C;
+            --tiktok-color: #000000;
+            --facebook-color: #1877F2;
+            --youtube-color: #FF0000;
+            --primary-color: #4F46E5;
+            --primary-light: #6366F1;
+            --dark-color: #111827;
+            --light-color: #F9FAFB;
+            --gray-color: #6B7280;
+            --border-radius: 16px;
+            --border-radius-lg: 24px;
+            --box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+            --box-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --gradient: linear-gradient(135deg, #4F46E5 0%, #8B5CF6 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 560px;
+            width: 90%;
+            margin: 0 auto;
+            padding: 3rem 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            animation: fadeInDown 0.6s both;
+        }
+
+        .logo {
+            margin-bottom: 1.5rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700;
+            font-size: 2rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+            display: inline-block;
+        }
+
+        h1 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #111827, #374151);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--gray-color);
+            font-size: 1.125rem;
+            max-width: 420px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .connect-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            margin: 2rem 0;
+            animation: fadeIn 0.8s both 0.2s;
+        }
+
+        .connect-button {
+            height: 80px;
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            align-items: center;
+            padding: 0 28px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .connect-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .connect-button:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--box-shadow-hover);
+        }
+
+        .connect-button:hover::before {
+            opacity: 1;
+        }
+
+        .connect-button:active {
+            transform: translateY(0);
+        }
+
+        .button-instagram {
+            border-left: 4px solid var(--instagram-color);
+        }
+
+        .button-tiktok {
+            border-left: 4px solid var(--tiktok-color);
+        }
+
+        .button-facebook {
+            border-left: 4px solid var(--facebook-color);
+        }
+
+        .button-youtube {
+            border-left: 4px solid var(--youtube-color);
+        }
+
+        .button-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+
+        .connect-button:hover .button-icon {
+            transform: scale(1.1);
+        }
+
+        .button-instagram .button-icon {
+            background: linear-gradient(45deg, #F58529, #DD2A7B, #8134AF, #515BD4);
+            color: white;
+            box-shadow: 0 4px 15px rgba(225, 48, 108, 0.3);
+        }
+
+        .button-tiktok .button-icon {
+            background-color: black;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .button-facebook .button-icon {
+            background-color: var(--facebook-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(24, 119, 242, 0.3);
+        }
+
+        .button-youtube .button-icon {
+            background-color: var(--youtube-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .button-text {
+            flex: 1;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1.125rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: var(--transition);
+        }
+
+        .connect-button:hover .button-text {
+            color: var(--primary-light);
+        }
+
+        .button-arrow {
+            color: #D1D5DB;
+            transition: var(--transition);
+            font-size: 1.25rem;
+        }
+
+        .connect-button:hover .button-arrow {
+            transform: translateX(5px);
+            color: var(--primary-color);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(17, 24, 39, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            width: 90%;
+            max-width: 600px;
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            transform: translateY(20px) scale(0.98);
+            transition: var(--transition);
+            opacity: 0;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 28px;
+            border-bottom: 1px solid #F3F4F6;
+        }
+
+        .modal-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        
+        .instagram-title {
+            color: var(--instagram-color);
+        }
+        
+        .tiktok-title {
+            color: var(--tiktok-color);
+        }
+        
+        .facebook-title {
+            color: var(--facebook-color);
+        }
+        
+        .youtube-title {
+            color: var(--youtube-color);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #9CA3AF;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background-color: #F3F4F6;
+            color: #111827;
+            transform: rotate(90deg);
+        }
+
+        .modal-content {
+            position: relative;
+            min-height: 400px;
+        }
+
+        .modal-iframe {
+            width: 100%;
+            height: 460px;
+            border: none;
+        }
+
+        .loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 4px solid rgba(79, 70, 229, 0.1);
+            border-top-color: var(--primary-color);
+            animation: spin 1s infinite cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--gray-color);
+            font-size: 0.9375rem;
+            animation: fadeIn 0.8s both 0.4s;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 2rem 0;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .connect-button {
+                height: 72px;
+                padding: 0 24px;
+            }
+            
+            .modal-content {
+                min-height: 360px;
+            }
+            
+            .modal-iframe {
+                height: 400px;
+            }
+        }
+
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo"></i>Autoreels AI</div><br class="mt-[-10px]">
+            <i class="fas fa-robot fa-2x" style="color: #4caf50;"></i>
+            <h1>Connect Your Socials</h1>
+            <p class="subtitle">Link your social media accounts to unlock personalized content creation powered by AI</p>
+        </div>
+
+        <div class="connect-buttons">
+            <button class="connect-button button-instagram" data-platform="instagram" data-sync="acc-sync1.html">
+                <div class="button-icon">
+                    <i class="fab fa-instagram"></i>
+                </div>
+                <div class="button-text">Connect Instagram</div>
+                <div class="button-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </button>
+
+            <button class="connect-button button-tiktok" data-platform="tiktok" data-sync="acc-sync2.html">
+                <div class="button-icon">
+                    <i class="fab fa-tiktok"></i>
+                </div>
+                <div class="button-text">Connect TikTok</div>
+                <div class="button-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </button>
+
+            <button class="connect-button button-facebook" data-platform="facebook" data-sync="acc-sync3.html">
+                <div class="button-icon">
+                    <i class="fab fa-facebook-f"></i>
+                </div>
+                <div class="button-text">Connect Facebook</div>
+                <div class="button-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </button>
+
+            <button class="connect-button button-youtube" data-platform="youtube" data-sync="acc-sync4.html">
+                <div class="button-icon">
+                    <i class="fab fa-youtube"></i>
+                </div>
+                <div class="button-text">Connect YouTube</div>
+                <div class="button-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <div class="footer">
+        &copy; 2025 Autoreels AI. All rights reserved. || Fully secured and Encrypted <i class="fas fa-shield-alt"></i>
+        <a href="index.html">Home</a>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">
+                    <!-- Platform icon and name will be inserted here -->
+                </div>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner"></div>
+                </div>
+                <iframe class="modal-iframe" id="modalIframe" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal functionality
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalClose = document.getElementById('modalClose');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalIframe = document.getElementById('modalIframe');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const connectButtons = document.querySelectorAll('.connect-button');
+
+        // Platform icons for modal titles
+        const platformIcons = {
+            instagram: '<i class="fab fa-instagram"></i> Connect Instagram',
+            tiktok: '<i class="fab fa-tiktok"></i> Connect TikTok',
+            facebook: '<i class="fab fa-facebook-f"></i> Connect Facebook',
+            youtube: '<i class="fab fa-youtube"></i> Connect YouTube'
+        };
+
+        // Platform-specific modal title classes
+        const platformClasses = {
+            instagram: 'instagram-title',
+            tiktok: 'tiktok-title',
+            facebook: 'facebook-title',
+            youtube: 'youtube-title'
+        };
+
+        // Open modal function
+        function openModal(platform, syncUrl) {
+
+            if (syncUrl.includes('dashboard.html')) {
+                window.location.href = syncURL;
+                return;
+            }
+            // Set modal title with platform icon
+            modalTitle.innerHTML = platformIcons[platform];
+            modalTitle.className = 'modal-title ' + platformClasses[platform];
+            
+            // Show loading spinner
+            loadingSpinner.style.display = 'block';
+            
+            // Load iframe content
+            modalIframe.src = syncUrl;
+            
+            // Show modal with animation
+            modalOverlay.classList.add('active');
+            
+            // Lock body scroll
+            document.body.classList.add('modal-open');
+            
+            // Hide spinner when iframe is loaded
+            modalIframe.onload = function() {
+                loadingSpinner.style.display = 'none';
+            };
+        }
+
+        // Close modal function
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+            document.body.classList.remove('modal-open');
+            
+            // Clear iframe source after animation
+            setTimeout(() => {
+                modalIframe.src = '';
+            }, 300);
+        }
+
+        // Add click event listeners to connect buttons
+        connectButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const platform = button.getAttribute('data-platform');
+                const syncUrl = button.getAttribute('data-sync');
+                openModal(platform, syncUrl);
+            });
+        });
+
+        // Close modal when clicking close button
+        modalClose.addEventListener('click', closeModal);
+
+        // Close modal when clicking outside
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                closeModal();
+            }
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        // Add animation to buttons on hover
+        connectButtons.forEach(button => {
+            button.addEventListener('mouseenter', () => {
+                button.style.transform = 'translateY(-3px)';
+            });
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+
+    <script src="./assets/js/jquery-3.7.0.js"></script>
+    <script src="./assets/js/jquery-migrate-3.4.1.js"></script>
+    <script src="./assets/js/slick.min.js"></script>
+    <script src="./assets/js/scrollreveal.js"></script>
+    <script src="./assets/js/swiper-bundle.min.js"></script>
+    <script src="./assets/js/bootstrap.bundle.min.js"></script>
+    <script src="./assets/js/countUp.min.js"></script>
+    <script src="./assets/js/waypoints.min.js"></script>
+    <script src="./assets/js/phosphor-icons.js"></script>
+    <script src="./assets/js/main.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUTOREELS AI - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"/>
+    <link rel="shortcut icon" href="./assets/images/fav.png"/>
+    <link rel="stylesheet" href="./assets/css/animate.min.css"/>
+    <link rel="stylesheet" href="./assets/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="./assets/css/slick.css"/>
+    <link rel="stylesheet" href="./assets/icons/style.css"/>
+    <link rel="stylesheet" href="./assets/css/style.css"/>
+    <link rel="stylesheet" href="./assets/css/swiper-bundle.min.css"/>
+    <style>
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 0.7; }
+            70%, 100% { transform: scale(1.3); opacity: 0; }
+        }
+        @keyframes scan {
+            0% { background-position: 0 -100vh; }
+            100% { background-position: 0 100vh; }
+        }
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            20%, 80% { opacity: 1; }
+        }
+        @keyframes wave {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.5); }
+        }
+        .font-plex {
+            font-family: 'IBM Plex Sans', sans-serif;
+        }
+        .neon-text {
+            text-shadow: 0 0 5px rgba(0, 242, 255, 0.5);
+        }
+        .neon-border {
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+            border: 1px solid rgba(0, 242, 255, 0.2);
+        }
+        .circuit-bg {
+            background-image:
+                linear-gradient(rgba(0, 242, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: scan 8s linear infinite;
+        }
+        .status-pulse {
+            animation: pulse 2s infinite;
+        }
+        .notification-pulse::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 12px;
+            height: 12px;
+            background-color: #ef4444;
+            border-radius: 50%;
+            animation: pulse-ring 2s infinite;
+        }
+        .wave-animation > div {
+            animation: wave 1.5s infinite ease-in-out;
+        }
+        .platform-icon {
+            transition: all 0.3s ease;
+        }
+        .platform-icon:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 5px rgba(0, 242, 255, 0.5));
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .blur-load {
+            filter: blur(5px);
+            transition: filter 0.5s ease;
+        }
+        .blur-load.loaded {
+            filter: blur(0);
+        }
+        .frosted-glass {
+            background: rgba(39, 39, 42, 0.7);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 font-plex min-h-screen flex flex-col">
+    <!-- Authentication Check -->
+    <script>
+        // Simulate authentication check
+        document.body.style.opacity = '0';
+        setTimeout(() => {
+            document.body.style.opacity = '1';
+            document.body.style.transition = 'opacity 0.5s ease-in';
+        }, 1500);
+    </script>
+
+    <!-- Top Navigation Bar -->
+    <header class="frosted-glass border-b border-gray-700 py-3 px-6 sticky top-0 z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-6">
+                <h1 class="text-md md:text-2xl font-thin tracking-wider neon-text">
+                    AUTOREELS AI <i class="fas fa-robot text-emerald-400 ml-1"></i>
+                </h1>
+              
+                <div class="hidden md:flex items-center space-x-6">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2 h-2 rounded-full bg-green-500 status-pulse"></div>
+                        <span class="text-sm text-gray-400">AI STATUS: <span class="text-green-400">Active</span></span>
+                    </div>
+                    <div class="text-sm text-gray-400">
+                        <span id="currentDateTime"></span>
+                    </div>
+                </div>
+            </div>
+          
+            <div class="flex items-center space-x-4">
+                <div class="flex space-x-2">
+                    <div class="platform-icon text-blue-500" title="Facebook"><i class="fab fa-facebook"></i></div>
+                    <div class="platform-icon text-pink-500" title="Instagram"><i class="fab fa-instagram"></i></div>
+                    <div class="platform-icon text-red-500" title="YouTube"><i class="fab fa-youtube"></i></div>
+                    <div class="platform-icon text-black dark:text-white" title="TikTok"><i class="fab fa-tiktok"></i></div>
+                    
+                </div>
+                <button id="notificationBtn" class="notification-pulse p-2 rounded-full hover:bg-gray-700 relative">
+                    <i class="fas fa-bell text-gray-400"></i>
+                </button>
+                <div class="hidden md:block w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center">
+                    <i class="fas fa-user text-sm"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar Navigation -->
+        <aside class="frosted-glass border-r border-gray-700 w-16 md:w-56 p-2 flex-shrink-0">
+            <nav class="flex flex-col space-y-4 mt-4">
+                <button data-section="dashboard" class="nav-btn flex items-center p-2 rounded-md hover:bg-gray-700 text-blue-400">
+                    <i class="fas fa-tachometer-alt w-6 text-center"></i>
+                    <span class="ml-3 hidden md:inline">Dashboard</span>
+                </button>
+                <button data-section="posts" class="nav-btn flex items-center p-2 rounded-md hover:bg-gray-700 text-gray-300">
+                    <i class="fas fa-photo-video w-6 text-center"></i>
+                    <span class="ml-3 hidden md:inline">Posts</span>
+                </button>
+                <button data-section="audience" class="nav-btn flex items-center p-2 rounded-md hover:bg-gray-700 text-gray-300">
+                    <i class="fas fa-users w-6 text-center"></i>
+                    <span class="ml-3 hidden md:inline">Audience</span>
+                </button>
+                <button data-section="analytics" class="nav-btn flex items-center p-2 rounded-md hover:bg-gray-700 text-gray-300">
+                    <i class="fas fa-chart-line w-6 text-center"></i>
+                    <span class="ml-3 hidden md:inline">Analytics</span>
+                </button>
+                <button data-section="support" class="nav-btn flex items-center p-2 rounded-md hover:bg-gray-700 text-gray-300">
+                    <i class="fas fa-headset w-6 text-center"></i>
+                    <span class="ml-3 hidden md:inline">Support</span>
+                </button>
+                <button data-section="settings" class="nav-btn flex items-center p-2 rounded-md hover:bg-gray-700 text-gray-300">
+                    <i class="fas fa-cog w-6 text-center"></i>
+                    <span class="ml-3 hidden md:inline">Settings</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="flex-1 overflow-y-auto p-4 md:p-6">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <div class="max-w-6xl mx-auto space-y-6">
+                    <div class="bg-gray-800 rounded-xl p-6 neon-border circuit-bg">
+                        <h2 class="text-xl font-medium text-blue-400 mb-2">Welcome to Autoreels AI</h2>
+                        <p class="text-gray-300 mb-4">All systems online. Your accounts are being analyzed for optimal performance.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- AI Engine Status Card -->
+                        <div class="bg-gray-800 rounded-xl p-6 neon-border">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-medium text-blue-400">AI Engine Status</h3>
+                                <div class="w-3 h-3 rounded-full bg-green-500 status-pulse"></div>
+                            </div>
+                            <p class="text-gray-300 mb-6">Currently analyzing account behavior across connected platforms...</p>
+                            <div class="flex justify-center my-4">
+                                <div class="wave-animation flex items-end h-12 space-x-1">
+                                    <div class="w-1 h-1 bg-blue-400 rounded-full" style="animation-delay: 0ms"></div>
+                                    <div class="w-1 h-3 bg-blue-400 rounded-full" style="animation-delay: 100ms"></div>
+                                    <div class="w-1 h-6 bg-blue-400 rounded-full" style="animation-delay: 200ms"></div>
+                                    <div class="w-1 h-8 bg-blue-400 rounded-full" style="animation-delay: 300ms"></div>
+                                    <div class="w-1 h-10 bg-blue-400 rounded-full" style="animation-delay: 400ms"></div>
+                                    <div class="w-1 h-8 bg-blue-400 rounded-full" style="animation-delay: 500ms"></div>
+                                    <div class="w-1 h-6 bg-blue-400 rounded-full" style="animation-delay: 600ms"></div>
+                                    <div class="w-1 h-3 bg-blue-400 rounded-full" style="animation-delay: 700ms"></div>
+                                    <div class="w-1 h-1 bg-blue-400 rounded-full" style="animation-delay: 800ms"></div>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-400 mt-4">This may take a few minutes. Please do not disconnect.</p>
+                        </div>
+
+                        <!-- Content Creation Engine Card -->
+                        <div class="bg-gray-800 rounded-xl p-6 neon-border">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-medium text-blue-400">Content Creation Engine</h3>
+                                <i class="fas fa-magic text-purple-400"></i>
+                            </div>
+                            <p class="text-gray-300 mb-2">Generating optimized content using trending insights.</p>
+                            <div class="mt-6 mb-4">
+                                <div class="text-sm text-gray-400 mb-2">Estimated delivery</div>
+                                <div class="text-2xl font-light text-blue-400" id="contentCountdown">2hrs 14min</div>
+                            </div>
+                            <div class="w-full bg-gray-700 rounded-full h-2">
+                                <div class="bg-blue-500 h-2 rounded-full" style="width: 28%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Engagement Tracker Card -->
+                        <div class="bg-gray-800 rounded-xl p-6 neon-border">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-medium text-blue-400">Engagement Tracker</h3>
+                                <i class="fas fa-chart-bar text-green-400"></i>
+                            </div>
+                            <p class="text-gray-300 mb-6">Fetching audience reach data...</p>
+                            <div class="flex justify-center my-4">
+                                <div class="w-16 h-16 border-4 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+                            </div>
+                            <p class="text-sm text-gray-400">Follower insights will update after your next post.</p>
+                        </div>
+
+                        <!-- Platform Sync Status Card -->
+                        <div class="bg-gray-800 rounded-xl p-6 neon-border md:col-span-2 lg:col-span-3">
+                            <h3 class="text-lg font-medium text-blue-400 mb-4">Platform Sync Status</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                                <div class="platform-status">
+                                    <div class="flex items-center space-x-2 mb-2">
+                                        <i class="fab fa-facebook text-blue-500"></i>
+                                        <span class="text-gray-300">Facebook</span>
+                                    </div>
+                                    <div class="w-full bg-gray-700 rounded-full h-1.5">
+                                        <div class="bg-blue-500 h-1.5 rounded-full" style="width: 85%"></div>
+                                    </div>
+                                    <div class="text-xs text-gray-400 mt-1">Syncing posts...</div>
+                                </div>
+                                <div class="platform-status">
+                                    <div class="flex items-center space-x-2 mb-2">
+                                        <i class="fab fa-instagram text-pink-500"></i>
+                                        <span class="text-gray-300">Instagram</span>
+                                    </div>
+                                    <div class="w-full bg-gray-700 rounded-full h-1.5">
+                                        <div class="bg-blue-500 h-1.5 rounded-full" style="width: 100%"></div>
+                                    </div>
+                                    <div class="text-xs text-gray-400 mt-1">Ready</div>
+                                </div>
+                                <div class="platform-status">
+                                    <div class="flex items-center space-x-2 mb-2">
+                                        <i class="fab fa-tiktok text-black dark:text-white"></i>
+                                        <span class="text-gray-300">TikTok</span>
+                                    </div>
+                                    <div class="w-full bg-gray-700 rounded-full h-1.5">
+                                        <div class="bg-blue-500 h-1.5 rounded-full" style="width: 45%"></div>
+                                    </div>
+                                    <div class="text-xs text-gray-400 mt-1">Pending auth...</div>
+                                </div>
+                                <div class="platform-status">
+                                    <div class="flex items-center space-x-2 mb-2">
+                                        <i class="fab fa-youtube text-red-500"></i>
+                                        <span class="text-gray-300">YouTube</span>
+                                    </div>
+                                    <div class="w-full bg-gray-700 rounded-full h-1.5">
+                                        <div class="bg-blue-500 h-1.5 rounded-full" style="width: 72%"></div>
+                                    </div>
+                                    <div class="text-xs text-gray-400 mt-1">Processing...</div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Posts Section -->
+            <section id="posts" class="content-section">
+                <div class="max-w-6xl mx-auto">
+                    <div class="bg-gray-800 rounded-xl p-6 neon-border mb-6">
+                        <h2 class="text-xl font-medium text-blue-400 mb-6">Content Pipeline</h2>
+                       
+                        <div class="flex space-x-2 mb-6">
+                            <button class="tab-btn active md:px-4 md:py-2 sm:p-4 rounded-md bg-gray-700 text-blue-400" data-tab="queued">Queued</button>
+                            <button class="tab-btn md:px-4 md:py-2 sm:p-1 rounded-md text-gray-300 hover:bg-gray-700" data-tab="in-progress">In Progress</button>
+                            <button class="tab-btn md:px-4 md:py-2 sm:p-1 rounded-md text-gray-300 hover:bg-gray-700" data-tab="posted">Posted</button>
+                        </div>
+                       
+                        <div class="tab-content active" id="queued">
+                            <div class="space-y-4">
+                                <div class="bg-gray-700 rounded-lg p-4">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="text-gray-300">AI is optimizing thumbnail selection</div>
+                                        <div class="text-xs text-gray-400">ETA: 12min</div>
+                                    </div>
+                                    <div class="w-full bg-gray-600 rounded-full h-1.5">
+                                        <div class="bg-blue-500 h-1.5 rounded-full" style="width: 30%"></div>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-700 rounded-lg p-4">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="text-gray-300">Captions being generated</div>
+                                        <div class="text-xs text-gray-400">ETA: 7min</div>
+                                    </div>
+                                    <div class="w-full bg-gray-600 rounded-full h-1.5">
+                                        <div class="bg-blue-500 h-1.5 rounded-full" style="width: 15%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="tab-content hidden" id="in-progress">
+                            <div class="space-y-4">
+                                <div class="bg-gray-700 rounded-lg p-4">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="text-gray-300">Video rendering in progress</div>
+                                        <div class="text-xs text-gray-400">ETA: 34min</div>
+                                    </div>
+                                    <div class="w-full bg-gray-600 rounded-full h-1.5">
+                                        <div class="bg-blue-500 h-1.5 rounded-full" style="width: 65%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="tab-content hidden" id="posted">
+                            <div class="text-gray-400 text-center py-8">
+                                No posts published yet. Your first AI-generated content will appear here.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Audience Section -->
+            <section id="audience" class="content-section">
+                <div class="max-w-6xl mx-auto">
+                    <div class="bg-gray-800 rounded-xl p-6 neon-border">
+                        <h2 class="text-xl font-medium text-blue-400 mb-6">Audience Insights</h2>
+                       
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                            <div class="bg-gray-700 rounded-lg p-4">
+                                <div class="text-gray-400 mb-2">Total Followers</div>
+                                <div class="text-3xl font-light text-gray-300">--</div>
+                                <div class="text-xs text-gray-400 mt-2">Fetching latest data...</div>
+                            </div>
+                            <div class="bg-gray-700 rounded-lg p-4">
+                                <div class="text-gray-400 mb-2">Engagement Rate</div>
+                                <div class="text-3xl font-light text-gray-300">--</div>
+                                <div class="text-xs text-gray-400 mt-2">Calculating metrics...</div>
+                            </div>
+                            <div class="bg-gray-700 rounded-lg p-4">
+                                <div class="text-gray-400 mb-2">Estimated Update</div>
+                                <div class="text-3xl font-light text-blue-400" id="audienceCountdown">1hr 43min</div>
+                                <div class="text-xs text-gray-400 mt-2">After first post completes</div>
+                            </div>
+                        </div>
+                       
+                        <div class="bg-gray-700 rounded-lg p-4 blur-load">
+                            <div class="h-64 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 border-4 border-blue-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                                    <div class="text-gray-300">Compiling audience demographics...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics" class="content-section">
+                <div class="max-w-6xl mx-auto">
+                    <div class="bg-gray-800 rounded-xl p-6 neon-border">
+                        <h2 class="text-xl font-medium text-blue-400 mb-6">Performance Analytics</h2>
+                       
+                        <div class="mb-6">
+                            <div class="flex items-center space-x-2 text-gray-300 mb-2">
+                                <i class="fas fa-sync-alt animate-spin"></i>
+                                <span>Syncing performance metrics from connected platforms...</span>
+                            </div>
+                            <div class="text-sm text-gray-400">Last full sync: <span id="lastSyncTime">Never</span></div>
+                        </div>
+                       
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div class="bg-gray-700 rounded-lg p-4 blur-load">
+                                <div class="h-64 flex items-center justify-center">
+                                    <div class="text-gray-400">Reach analytics loading...</div>
+                                </div>
+                            </div>
+                            <div class="bg-gray-700 rounded-lg p-4 blur-load">
+                                <div class="h-64 flex items-center justify-center">
+                                    <div class="text-gray-400">Engagement trends loading...</div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="bg-gray-700 rounded-lg p-4 blur-load">
+                            <div class="h-96 flex items-center justify-center">
+                                <div class="text-gray-400">Content performance data will appear here</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Support Section -->
+            <section id="support" class="content-section">
+                <div class="max-w-6xl mx-auto">
+                    <div class="bg-gray-800 rounded-xl p-6 neon-border">
+                        <h2 class="text-xl font-medium text-blue-400 mb-6">AI Support</h2>
+                       
+                        <div class="bg-gray-700 rounded-lg p-4 mb-6">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium">AI Support Bot</div>
+                                    <div class="text-xs text-gray-400">Last reply: <span id="lastReplyTime">10 mins ago</span></div>
+                                </div>
+                            </div>
+                           
+                            <div class="space-y-4 mb-6">
+                                <div class="flex justify-end">
+                                    <div class="bg-blue-500 rounded-lg p-3 max-w-xs md:max-w-md">
+                                        <div class="text-sm">Hello! I'm your AI support assistant. How can I help you today?</div>
+                                        <div class="text-xs text-gray-300 text-right mt-1">Just now</div>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                            <div class="flex items-center space-x-2">
+                                <input type="text" placeholder="Type your message..." class="flex-1 bg-gray-600 border border-gray-500 rounded-lg md:px-4 md:py-2 sm:px-2 sm:py-1 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                                <button class="bg-blue-500 hover:bg-blue-600 rounded-lg md:px-4 md:py-2 p-3">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                       
+                        <div class="text-sm text-gray-400">
+                            <i class="fas fa-info-circle mr-1"></i> Our human support team typically responds within 24-48 hours.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="content-section">
+                <div class="max-w-6xl mx-auto">
+                    <div class="bg-gray-800 rounded-xl p-6 neon-border">
+                        <h2 class="text-xl font-medium text-blue-400 mb-6">Account Settings</h2>
+                       
+                        <div class="space-y-6">
+                            <div class="bg-gray-700 rounded-lg p-4">
+                                <h3 class="text-lg font-medium text-gray-300 mb-4">Connected Accounts</h3>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between p-3 border border-gray-600 rounded-lg">
+                                        <div class="flex items-center space-x-3">
+                                            <i class="fab fa-instagram text-pink-500 text-xl"></i>
+                                            <span class="text-gray-300">Instagram</span>
+                                        </div>
+                                        <a href="connect.html"> <button  class="text-xs md:text-sm bg-blue-500 hover:bg-blue-600 px-1 py-2 rounded">Connect</button></a>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 border border-gray-600 rounded-lg opacity-70">
+                                        <div class="flex items-center space-x-3">
+                                            <i class="fab fa-tiktok text-black dark:text-white text-xl"></i>
+                                            <span class="text-gray-300">TikTok</span>
+                                        </div>
+                                        <div class="text-xs ml-1 text-green-400">Connected</div>                                    </div>
+                                    <div class="flex items-center justify-between p-3 border border-gray-600 rounded-lg">
+                                        <div class="flex items-center space-x-3">
+                                            <i class="fab fa-facebook text-blue-500 text-xl"></i>
+                                            <span class="text-gray-300">Facebook</span>
+                                        </div>
+                                       <a href="connect.html"> <button  class="text-xs md:text-sm bg-blue-500 hover:bg-blue-600 px-1 py-2 rounded">Connect</button></a>
+                                    </div>
+
+                                    <div class="flex items-center justify-between p-3 border border-gray-600 rounded-lg">
+                                        <div class="flex items-center space-x-3">
+                                            <i class="fab fa-youtube text-red-500 text-xl"></i>
+                                            <span class="text-gray-300">Youtube</span>
+                                        </div>
+                                       <a href="connect.html"> <button  class="text-xs md:text-sm bg-blue-500 hover:bg-blue-600 px-1 py-2 rounded">Connect</button></a>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                            <div class="bg-gray-700 rounded-lg p-4">
+                                <h3 class="text-lg font-medium text-gray-300 mb-4">Posting Schedule</h3>
+                                <div class="text-gray-400 mb-4">Feature available after first post completes</div>
+                                <div class="opacity-50">
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                                        <div class="border border-gray-600 rounded-lg p-3">
+                                            <div class="text-gray-300 mb-2">Optimal Time</div>
+                                            <div class="text-sm text-gray-400">Calculating...</div>
+                                        </div>
+                                        <div class="border border-gray-600 rounded-lg p-3">
+                                            <div class="text-gray-300 mb-2">Posts Per Day</div>
+                                            <select class="w-full bg-gray-800 border border-gray-600 rounded p-2 text-sm" disabled>
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                            </select>
+                                        </div>
+                                        <div class="border border-gray-600 rounded-lg p-3">
+                                            <div class="text-gray-300 mb-2">Auto-Posting</div>
+                                            <label class="inline-flex items-center cursor-not-allowed">
+                                                <input type="checkbox" class="form-checkbox bg-gray-800 border-gray-600" disabled>
+                                                <span class="ml-2 text-sm text-gray-400">Enable</span>
+                                            </label>
+                                        </div>
+                                        <div class="border border-gray-600 rounded-lg p-3">
+                                            <div class="text-gray-300 mb-2">Content Types</div>
+                                            <div class="text-sm text-gray-400">Analyzing...</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="frosted-glass border-t border-gray-700 py-3 px-6">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center text-sm">
+            <div class="flex items-center space-x-2 mb-2 md:mb-0">
+                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                <span class="text-gray-400">Connected to AI servers</span>
+            </div>
+            <div class="text-gray-400">
+                AUTOREELS AI v2.4.9 | <span id="footerYear"></span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+         // Check if user came from verify.html
+         if (!sessionStorage.getItem('verified')) {
+            window.location.href = 'page-not-found.html';
+        }
+
+        // Simulate 3-second login delay
+        document.body.style.opacity = '0';
+        setTimeout(() => {
+            document.body.style.opacity = '1';
+            document.body.style.transition = 'opacity 0.5s ease-in';
+        }, 3000);
+        // Update current date and time
+        function updateDateTime() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            document.getElementById('currentDateTime').textContent = now.toLocaleDateString('en-US', options);
+        }
+        updateDateTime();
+        setInterval(updateDateTime, 60000);
+
+        // Set footer year
+        document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+        // Navigation between sections
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Update active nav button
+                document.querySelectorAll('.nav-btn').forEach(b => {
+                    b.classList.remove('text-blue-400');
+                    b.classList.add('text-gray-300');
+                });
+                this.classList.remove('text-gray-300');
+                this.classList.add('text-blue-400');
+               
+                // Show selected section
+                const sectionId = this.getAttribute('data-section');
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(sectionId).classList.add('active');
+            });
+        });
+
+        // Tab functionality for Posts section
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Update active tab button
+                document.querySelectorAll('.tab-btn').forEach(b => {
+                    b.classList.remove('active', 'bg-gray-700', 'text-blue-400');
+                    b.classList.add('text-gray-300', 'hover:bg-gray-700');
+                });
+                this.classList.add('active', 'bg-gray-700', 'text-blue-400');
+                this.classList.remove('text-gray-300', 'hover:bg-gray-700');
+               
+                // Show selected tab content
+                const tabId = this.getAttribute('data-tab');
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.add('hidden');
+                });
+                document.getElementById(tabId).classList.remove('hidden');
+            });
+        });
+
+        // Countdown timers
+        function startCountdown(elementId, initialMinutes) {
+            let minutes = initialMinutes;
+            const element = document.getElementById(elementId);
+           
+            const interval = setInterval(() => {
+                minutes--;
+                if (minutes < 0) {
+                    clearInterval(interval);
+                    element.textContent = "Ready";
+                    return;
+                }
+               
+                const hours = Math.floor(minutes / 60);
+                const mins = minutes % 60;
+                element.textContent = `${hours}hrs ${mins}min`;
+            }, 60000); // Update every minute
+        }
+       
+        startCountdown('contentCountdown', 134); // 2hrs 14min
+        startCountdown('audienceCountdown', 103); // 1hr 43min
+
+        // Simulate loading of blurred elements
+        setTimeout(() => {
+            document.querySelectorAll('.blur-load').forEach(el => {
+                el.classList.add('loaded');
+               
+                // Replace with actual content (simulated)
+                if (el.closest('#analytics')) {
+                    setTimeout(() => {
+                        el.innerHTML = `
+                            <div class="text-gray-300 text-center py-8">
+                                <div class="text-xl font-medium mb-2">Analytics Data Loaded</div>
+                                <div class="text-sm text-gray-400">Performance metrics now available</div>
+                            </div>
+                        `;
+                    }, 1500);
+                }
+            });
+        }, 3000);
+
+        // Update last sync time
+        setTimeout(() => {
+            document.getElementById('lastSyncTime').textContent = new Date().toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit'
+            }) + ' today';
+        }, 5000);
+
+        // Simulate random support replies
+        setInterval(() => {
+            const replies = [
+                "5 mins ago",
+                "8 mins ago",
+                "12 mins ago",
+                "15 mins ago"
+            ];
+            document.getElementById('lastReplyTime').textContent = replies[Math.floor(Math.random() * replies.length)];
+        }, 30000);
+
+        // Notification dropdown
+        const notificationBtn = document.getElementById('notificationBtn');
+        notificationBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const dropdown = document.createElement('div');
+            dropdown.className = 'absolute right-0 mt-2 w-72 bg-gray-800 rounded-md shadow-lg border border-gray-700 z-50';
+            dropdown.innerHTML = `
+                <div class="p-4 border-b border-gray-700">
+                    <h3 class="text-sm font-medium text-blue-400">Notifications</h3>
+                </div>
+                <div class="p-4 text-sm text-gray-300">
+                    AI is still preparing your first reel. Estimated completion in <span class="text-blue-400">${Math.floor(Math.random() * 60) + 30} minutes</span>.
+                </div>
+            `;
+           
+            // Remove any existing dropdown
+            document.querySelectorAll('.notification-dropdown').forEach(el => el.remove());
+            dropdown.classList.add('notification-dropdown');
+           
+            this.parentElement.appendChild(dropdown);
+           
+            // Close when clicking outside
+            setTimeout(() => {
+                document.addEventListener('click', function closeDropdown() {
+                    dropdown.remove();
+                    document.removeEventListener('click', closeDropdown);
+                });
+            }, 10);
+        });
+
+        // Simulate initial loading of data
+        setTimeout(() => {
+            document.querySelectorAll('.blur-load').forEach(el => {
+                el.classList.add('loaded');
+            });
+        }, 2000);
+    </script>
+</body>
+</html>
